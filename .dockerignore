@@ -1,0 +1,63 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+API_DOCS.md
+api.md
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Dependency directories
+node_modules/
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Build artifacts
+main
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Vendor directory
+vendor/
+
+# Go workspace file
+go.work
+
+# Temporary files
+*.tmp
+*.temp
