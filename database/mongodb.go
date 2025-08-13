@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -15,6 +16,7 @@ var DB *mongo.Database
 
 func ConnectMongoDB() {
 	// 创建MongoDB客户端选项
+	fmt.Printf("config.AppConfig.MongoURI: %v\n", config.AppConfig.MongoURI)
 	clientOptions := options.Client().ApplyURI(config.AppConfig.MongoURI)
 
 	// 连接到MongoDB

@@ -4,27 +4,27 @@ import (
 	"log"
 	"os"
 	"strconv"
-
-	"github.com/joho/godotenv"
 )
 
 type Config struct {
-	Port             string
-	GinMode          string
-	MongoURI         string
-	MongoDatabase    string
-	JWTSecret        string
-	JWTExpiresHours  int
-	BcryptCost       int
+	Port            string
+	GinMode         string
+	MongoURI        string
+	MongoDatabase   string
+	JWTSecret       string
+	JWTExpiresHours int
+	BcryptCost      int
 }
 
 var AppConfig *Config
 
 func LoadConfig() {
-	// 加载 .env 文件
-	if err := godotenv.Load(); err != nil {
-		log.Println("Warning: .env file not found, using environment variables")
+	// 打印当前目录
+	dir, err := os.Getwd()
+	if err != nil {
+		log.Fatal("Failed to get current directory:", err)
 	}
+	log.Printf("Current directory: %s", dir)
 
 	// 解析JWT过期时间
 	jwtExpires, err := strconv.Atoi(getEnv("JWT_EXPIRES_HOURS", "24"))
@@ -39,13 +39,13 @@ func LoadConfig() {
 	}
 
 	AppConfig = &Config{
-		Port:             getEnv("PORT", "8080"),
-		GinMode:          getEnv("GIN_MODE", "debug"),
-		MongoURI:         getEnv("MONGO_URI", "mongodb://admin:Password@1@192.168.22.113:30017"),
-		MongoDatabase:    getEnv("MONGO_DATABASE", "memo_app"),
-		JWTSecret:        getEnv("JWT_SECRET", "your-secret-key-here"),
-		JWTExpiresHours:  jwtExpires,
-		BcryptCost:       bcryptCost,
+		Port:            getEnv("PORT", "8080"),
+		GinMode:         getEnv("GIN_MODE", "debug"),
+		MongoURI:        getEnv("MONGO_URI", "mongodb://admin:Password@1@192.168.22.113:30017"),
+		MongoDatabase:   getEnv("MONGO_DATABASE", "memo_app"),
+		JWTSecret:       getEnv("JWT_SECRET", "your-secret-key-here"),
+		JWTExpiresHours: jwtExpires,
+		BcryptCost:      bcryptCost,
 	}
 }
 

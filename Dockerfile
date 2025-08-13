@@ -23,8 +23,8 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 # 第二阶段：运行阶段
 FROM alpine:latest
 
-# 安装 ca-certificates 用于 HTTPS 请求
-RUN apk --no-cache add ca-certificates
+# 安装必要的工具
+RUN apk --no-cache add ca-certificates bash
 
 # 创建非 root 用户
 RUN addgroup -g 1001 -S appgroup && \
@@ -39,11 +39,12 @@ COPY --from=builder /app/main .
 # 复制配置文件（如果有的话）
 COPY --from=builder /app/.env* ./
 
-# 切换到非 root 用户
-USER appuser
+# 复制启动脚本
+COPY --from=builder /app/docker-entrypoint.sh .
+RUN chmod +x ./docker-entrypoint.sh
 
 # 暴露端口
 EXPOSE 8080
 
 # 运行应用
-CMD ["./main"]
+CMD ["./docker-entrypoint.sh", "./main"]
