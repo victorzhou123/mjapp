@@ -40,14 +40,6 @@ func (s *UserService) Register(req *models.RegisterRequest) (*models.User, error
 		return nil, err
 	}
 
-	// 检查手机号是否已存在
-	err = collection.FindOne(ctx, bson.M{"phone": req.Phone}).Decode(&existingUser)
-	if err == nil {
-		return nil, errors.New("手机号已存在")
-	} else if err != mongo.ErrNoDocuments {
-		return nil, err
-	}
-
 	// 加密密码
 	hashedPassword, err := utils.HashPassword(req.Password)
 	if err != nil {
@@ -58,7 +50,6 @@ func (s *UserService) Register(req *models.RegisterRequest) (*models.User, error
 	user := &models.User{
 		ID:        primitive.NewObjectID(),
 		Username:  req.Username,
-		Phone:     req.Phone,
 		Password:  hashedPassword,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
@@ -78,16 +69,9 @@ func (s *UserService) Login(req *models.LoginRequest) (*models.LoginResponse, er
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	// 查找用户（支持用户名或手机号登录）
+	// 查找用户（仅支持用户名登录）
 	var user models.User
-	filter := bson.M{
-		"$or": []bson.M{
-			{"username": req.Username},
-			{"phone": req.Username},
-		},
-	}
-
-	err := collection.FindOne(ctx, filter).Decode(&user)
+	err := collection.FindOne(ctx, bson.M{"username": req.Username}).Decode(&user)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, errors.New("用户名或密码错误")
@@ -111,31 +95,11 @@ func (s *UserService) Login(req *models.LoginRequest) (*models.LoginResponse, er
 		User: models.UserResponse{
 			ID:       user.ID,
 			Username: user.Username,
-			Phone:    user.Phone,
 		},
 	}, nil
 }
 
-// 忘记密码
-func (s *UserService) ForgotPassword(req *models.ForgotPasswordRequest) error {
-	collection := database.GetCollection("users")
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
 
-	// 检查手机号是否存在
-	var user models.User
-	err := collection.FindOne(ctx, bson.M{"phone": req.Phone}).Decode(&user)
-	if err != nil {
-		if err == mongo.ErrNoDocuments {
-			return errors.New("手机号不存在")
-		}
-		return err
-	}
-
-	// TODO: 这里应该发送短信验证码
-	// 目前只是模拟返回成功
-	return nil
-}
 
 // 根据ID获取用户
 func (s *UserService) GetUserByID(userID primitive.ObjectID) (*models.User, error) {

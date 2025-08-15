@@ -81,7 +81,7 @@ Content-Type: application/json
 **请求参数**:
 ```json
 {
-  "username": "用户名或手机号",
+  "username": "用户名",
   "password": "密码"
 }
 ```
@@ -89,7 +89,7 @@ Content-Type: application/json
 **参数说明**:
 | 参数名 | 类型 | 必填 | 说明 |
 |--------|------|------|------|
-| username | string | 是 | 用户名或手机号 |
+| username | string | 是 | 用户名 |
 | password | string | 是 | 用户密码 |
 
 **成功响应**:
@@ -101,8 +101,7 @@ Content-Type: application/json
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
     "user": {
       "id": 1,
-      "username": "demo_user",
-      "phone": "13800138000"
+      "username": "demo_user"
     }
   }
 }
@@ -130,7 +129,6 @@ Content-Type: application/json
 ```json
 {
   "username": "用户名",
-  "phone": "手机号",
   "password": "密码",
   "confirmPassword": "确认密码"
 }
@@ -140,7 +138,6 @@ Content-Type: application/json
 | 参数名 | 类型 | 必填 | 说明 |
 |--------|------|------|------|
 | username | string | 是 | 用户名，3-20个字符 |
-| phone | string | 是 | 手机号，11位数字 |
 | password | string | 是 | 密码，6-20个字符 |
 | confirmPassword | string | 是 | 确认密码，需与password一致 |
 
@@ -152,8 +149,7 @@ Content-Type: application/json
   "data": {
     "user": {
       "id": 2,
-      "username": "new_user",
-      "phone": "13800138000"
+      "username": "new_user"
     }
   }
 }
@@ -168,44 +164,7 @@ Content-Type: application/json
 }
 ```
 
-### 2.3 忘记密码
 
-**接口地址**: `POST /api/auth/forgot-password`
-
-**请求头**:
-```
-Content-Type: application/json
-```
-
-**请求参数**:
-```json
-{
-  "phone": "手机号"
-}
-```
-
-**参数说明**:
-| 参数名 | 类型 | 必填 | 说明 |
-|--------|------|------|------|
-| phone | string | 是 | 注册时使用的手机号 |
-
-**成功响应**:
-```json
-{
-  "code": 200,
-  "message": "验证码已发送",
-  "data": null
-}
-```
-
-**失败响应**:
-```json
-{
-  "code": 400,
-  "message": "手机号不存在",
-  "data": null
-}
-```
 
 ---
 

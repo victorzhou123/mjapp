@@ -23,7 +23,6 @@ func SetupRoutes(r *gin.Engine) {
 		{
 			auth.POST("/login", authController.Login)
 			auth.POST("/register", authController.Register)
-			auth.POST("/forgot-password", authController.ForgotPassword)
 		}
 
 		// 备忘录路由（需要认证）

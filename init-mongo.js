@@ -21,9 +21,8 @@ db.createCollection('users');
 // 创建备忘录集合
 db.createCollection('memos');
 
-// 为用户名和手机号创建唯一索引
+// 为用户名创建唯一索引
 db.users.createIndex({ "username": 1 }, { unique: true });
-db.users.createIndex({ "phone": 1 }, { unique: true });
 
 // 为备忘录创建索引
 db.memos.createIndex({ "user_id": 1 });
