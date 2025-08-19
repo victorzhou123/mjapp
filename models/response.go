@@ -7,8 +7,9 @@ type Response struct {
 }
 
 type ErrorResponse struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
+	Code    int         `json:"code"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
 
 // 成功响应
@@ -34,6 +35,16 @@ func ErrorResponseWithCode(code int, message string) ErrorResponse {
 	return ErrorResponse{
 		Code:    code,
 		Message: message,
+		Data:    nil,
+	}
+}
+
+// 错误响应带数据
+func ErrorResponseWithData(code int, message string, data interface{}) ErrorResponse {
+	return ErrorResponse{
+		Code:    code,
+		Message: message,
+		Data:    data,
 	}
 }
 

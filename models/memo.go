@@ -8,7 +8,7 @@ import (
 
 type Memo struct {
 	ID         primitive.ObjectID `bson:"_id,omitempty" json:"id"`
-	UserID     primitive.ObjectID `bson:"user_id" json:"user_id"`
+	UserID     primitive.ObjectID `bson:"user_id" json:"-"`
 	Title      string             `bson:"title" json:"title" binding:"required"`
 	Content    string             `bson:"content" json:"content"`
 	CreatedAt  time.Time          `bson:"created_at" json:"createTime"`

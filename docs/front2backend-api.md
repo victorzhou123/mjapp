@@ -395,7 +395,147 @@ Authorization: Bearer {token}
 
 ---
 
-## 4. 错误码说明
+## 4. 算力管理接口
+
+> **注意**: 以下接口需要在请求头中携带Authorization token
+> ```
+> Authorization: Bearer {token}
+> ```
+
+### 4.1 查询算力余额
+
+**接口地址**: `GET /api/currency/balance`
+
+**请求头**:
+```
+Authorization: Bearer {token}
+```
+
+**请求参数**: 无
+
+**成功响应**:
+```json
+{
+  "code": 200,
+  "message": "查询成功",
+  "data": {
+    "balance": 100,
+    "lastUpdateTime": "2024-01-01T12:00:00Z"
+  }
+}
+```
+
+**失败响应**:
+```json
+{
+  "code": 401,
+  "message": "未授权，请先登录",
+  "data": null
+}
+```
+
+### 4.2 扣减算力
+
+**接口地址**: `POST /api/currency/deduct`
+
+**请求头**:
+```
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+
+**请求参数**:
+```json
+{
+  "amount": 10,
+  "reason": "创建备忘录",
+  "memoId": 123
+}
+```
+
+**参数说明**:
+| 参数名 | 类型 | 必填 | 说明 |
+|--------|------|------|------|
+| amount | int | 是 | 扣减数量，必须大于0 |
+| reason | string | 是 | 扣减原因 |
+| memoId | int | 否 | 关联的备忘录ID |
+
+**成功响应**:
+```json
+{
+  "code": 200,
+  "message": "扣减成功",
+  "data": {
+    "remainingBalance": 90,
+    "deductedAmount": 10,
+    "transactionId": "tx_123456789"
+  }
+}
+```
+
+**失败响应**:
+```json
+{
+  "code": 400,
+  "message": "算力余额不足",
+  "data": {
+    "currentBalance": 5,
+    "requiredAmount": 10
+  }
+}
+```
+
+### 4.3 充值算力
+
+**接口地址**: `POST /api/currency/recharge`
+
+**请求头**:
+```
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+
+**请求参数**:
+```json
+{
+  "amount": 100,
+  "transactionId": "tx_iap_123456789",
+  "source": "purchase"
+}
+```
+
+**参数说明**:
+| 参数名 | 类型 | 必填 | 说明 |
+|--------|------|------|------|
+| amount | int | 是 | 充值数量，必须大于0 |
+| transactionId | string | 是 | 交易ID（来自支付平台） |
+| source | string | 否 | 充值来源：purchase(购买)、gift(赠送)等，默认为purchase |
+
+**成功响应**:
+```json
+{
+  "code": 200,
+  "message": "充值成功",
+  "data": {
+    "newBalance": 200,
+    "rechargedAmount": 100,
+    "transactionId": "tx_987654321"
+  }
+}
+```
+
+**失败响应**:
+```json
+{
+  "code": 400,
+  "message": "支付凭证验证失败",
+  "data": null
+}
+```
+
+---
+
+## 5. 错误码说明
 
 | 错误码 | 说明 | 解决方案 |
 |--------|------|----------|
@@ -407,7 +547,7 @@ Authorization: Bearer {token}
 
 ---
 
-## 5. 前端对接注意事项
+## 6. 前端对接注意事项
 
 1. **请求头设置**:
    - 所有POST/PUT请求需要设置 `Content-Type: application/json`
@@ -432,7 +572,7 @@ Authorization: Bearer {token}
 
 ---
 
-## 6. 测试示例
+## 7. 测试示例
 
 ### 使用curl测试登录接口
 ```bash
@@ -443,6 +583,8 @@ curl -X POST http://localhost:8080/api/auth/login \
     "password": "123456"
   }'
 ```
+
+
 
 ### 使用curl测试获取备忘录列表
 ```bash
@@ -458,6 +600,36 @@ curl -X POST http://localhost:8080/api/memos \
   -d '{
     "title": "测试备忘录",
     "content": "这是一个测试备忘录的内容"
+  }'
+```
+
+### 使用curl测试查询算力余额
+```bash
+curl -X GET http://localhost:8080/api/currency/balance \
+  -H "Authorization: Bearer your_token_here"
+```
+
+### 使用curl测试扣减算力
+```bash
+curl -X POST http://localhost:8080/api/currency/deduct \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer your_token_here" \
+  -d '{
+    "amount": 10,
+    "reason": "创建备忘录",
+    "memoId": 123
+  }'
+```
+
+### 使用curl测试充值算力
+```bash
+curl -X POST http://localhost:8080/api/currency/recharge \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer your_token_here" \
+  -d '{
+    "amount": 100,
+    "transactionId": "tx_iap_123456789",
+    "source": "purchase"
   }'
 ```
 
