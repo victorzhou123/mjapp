@@ -24,7 +24,7 @@ func NewCurrencyController(currencyService *services.CurrencyService) *CurrencyC
 // GetBalance 查询算力余额
 func (ctrl *CurrencyController) GetBalance(c *gin.Context) {
 	// 从JWT中获取用户ID
-	userIDInterface, exists := c.Get("userID")
+	userIDInterface, exists := c.Get("user_id")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, models.UnauthorizedResponse("未授权，请先登录"))
 		return
@@ -49,7 +49,7 @@ func (ctrl *CurrencyController) GetBalance(c *gin.Context) {
 // DeductBalance 扣减算力
 func (ctrl *CurrencyController) DeductBalance(c *gin.Context) {
 	// 从JWT中获取用户ID
-	userIDInterface, exists := c.Get("userID")
+	userIDInterface, exists := c.Get("user_id")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, models.UnauthorizedResponse("未授权，请先登录"))
 		return
@@ -97,7 +97,7 @@ func (ctrl *CurrencyController) DeductBalance(c *gin.Context) {
 // RechargeBalance 充值算力
 func (ctrl *CurrencyController) RechargeBalance(c *gin.Context) {
 	// 从JWT中获取用户ID
-	userIDInterface, exists := c.Get("userID")
+	userIDInterface, exists := c.Get("user_id")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, models.UnauthorizedResponse("未授权，请先登录"))
 		return
